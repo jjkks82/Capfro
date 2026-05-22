@@ -1,0 +1,8 @@
+Package: com.majood.capcutnoprotection
+Name: CapCut No Protection
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Disable CapCut integrity checks (by Majood)
+Maintainer: Majood
+Author: Majood
+Section: Tweaks
