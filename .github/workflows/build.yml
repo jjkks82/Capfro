@@ -32,10 +32,10 @@ jobs:
       - name: Build Tweak
         run: |
           cd $GITHUB_WORKSPACE
-          make package
+          make all
 
       - name: Upload dylib
         uses: actions/upload-artifact@v4
         with:
           name: CapCutNoProtection
-          path: ./packages/*.dylib
+          path: .theos/obj/debug/*.dylib
