@@ -1,4 +1,4 @@
-name: Build CapCut No Protection
+name: Build CapCut No Protection dylib only
 on: [push, workflow_dispatch]
 
 jobs:
@@ -29,13 +29,16 @@ jobs:
           cp -R sdks-master/* sdks/
           rm -rf sdks-master sdk.zip
 
-      - name: Build Tweak
+      - name: Build Tweak (dylib only)
         run: |
           cd $GITHUB_WORKSPACE
           make all
+          # استخراج ملف dylib الناتج مباشرة
+          find .theos -name "*.dylib" -exec cp {} ./ \;
+          ls -la *.dylib
 
       - name: Upload dylib
         uses: actions/upload-artifact@v4
         with:
-          name: CapCutNoProtection
-          path: .theos/obj/debug/*.dylib
+          name: CapCutNoProtection_dylib
+          path: ./*.dylib
