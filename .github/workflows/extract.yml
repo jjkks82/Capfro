@@ -2,8 +2,8 @@ name: Extract CapCut Classes
 
 on:
   push:
-    branches: [ "main" ] # بيشتغل تلقائياً أول ما تحفظ الملف في فرع main
-  workflow_dispatch: # يتيح لك تشغيله يدوياً برضه في أي وقت
+    branches: [ "main" ]
+  workflow_dispatch: 
 
 jobs:
   extract:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4 # تحديث إلى v4
 
     - name: Download CapCut from Google Drive
       run: |
@@ -41,7 +41,7 @@ jobs:
         echo "✅ تم استخراج الكلاسات بنجاح!"
 
     - name: Upload Classes File to Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4 # تحديث إلى v4 لحل المشكلة نهائياً
       with:
         name: CapCut-Class-Dump
         path: CapCut_Classes.txt
