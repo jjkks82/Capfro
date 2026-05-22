@@ -1,0 +1,49 @@
+name: Extract CapCut Classes
+
+on:
+  workflow_dispatch: # يتيح لك تشغيل السكريبت يدوياً بضغطة زر
+
+jobs:
+  extract:
+    runs-on: macos-latest # تشغيل على سيرفر ماك لأنه نظام iOS
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Download CapCut from Google Drive
+      run: |
+        echo "💥 جاري تحميل ملف CapCut من جوجل درايف..."
+        curl -L -o CapCut.zip "https://drive.google.com/uc?export=download&id=1VtVPCxKdYrNRaqExlh357Y3pZp1VUwUs"
+
+    - name: Unzip IPA File
+      run: |
+        echo "📦 جاري فك الضغط..."
+        unzip -q CapCut.zip -d extracted_files
+        # البحث عن مجلد الـ .app لـ كاب كات وتحديد مساره
+        APP_PATH=$(find extracted_files -name "*.app" | head -n 1)
+        echo "APP_PATH=$APP_PATH" >> $GITHUB_ENV
+
+    - name: Install dsdump (Class Dump Tool)
+      run: |
+        echo "🛠️ جاري تحميل أداة dsdump لفحص الكود..."
+        curl -L -o dsdump.tar.gz https://github.com/DerekSelander/dsdump/releases/download/v0.0.4/dsdump.tar.gz
+        tar -xzf dsdump.tar.gz
+        chmod +x dsdump
+        sudo mv dsdump /usr/local/bin/
+
+    - name: Extract Classes and Hooks
+      run: |
+        echo "🔍 جاري فحص الملف التنفيذي واستخراج الكلاسات..."
+        # تحديد موقع الملف التنفيذي الرئيسي داخل الـ .app
+        EXECUTABLE_PATH=$(find ${{ env.APP_PATH }} -maxdepth 1 -type f -exec file {} \; | grep "Mach-O" | cut -d: -f1 | head -n 1)
+        
+        # تشغيل أداة الفحص وحفظ الناتج في ملف نصي
+        dsdump --objc $EXECUTABLE_PATH > CapCut_Classes.txt
+        echo "✅ تم استخراج الكلاسات بنجاح!"
+
+    - name: Upload Classes File to Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: CapCut-Class-Dump
+        path: CapCut_Classes.txt
