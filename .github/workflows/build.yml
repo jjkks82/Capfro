@@ -1,0 +1,20 @@
+name: Build CapCut No Protection
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Tweak
+        uses: kabiroberai/theos-action@v1
+        with:
+          package-name: com.majood.capcutnoprotection
+          output-dylib: true
+
+      - name: Upload dylib
+        uses: actions/upload-artifact@v4
+        with:
+          name: CapCutNoProtection
+          path: "*.dylib"
