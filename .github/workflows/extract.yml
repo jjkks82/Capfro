@@ -11,12 +11,14 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4 # تحديث إلى v4
+      uses: actions/checkout@v4
 
-    - name: Download CapCut from Google Drive
+    - name: Download CapCut from GoFile
       run: |
-        echo "💥 جاري تحميل ملف CapCut من جوجل درايف..."
-        curl -L -o CapCut.zip "https://drive.google.com/uc?export=download&id=1VtVPCxKdYrNRaqExlh357Y3pZp1VUwUs"
+        echo "🚀 جاري فحص الرابط واستخراج التحميل المباشر..."
+        FILE_URL=$(curl -s "https://gofile.io/d/s3Pnil" | grep -o 'https://store[0-9]*.gofile.io/download/[^"]*' | head -n 1)
+        echo "✅ تم العثور على الرابط: $FILE_URL"
+        curl -L -o CapCut.zip "$FILE_URL"
 
     - name: Unzip IPA File
       run: |
@@ -27,7 +29,7 @@ jobs:
 
     - name: Install dsdump (Class Dump Tool)
       run: |
-        echo "🛠️ جاري تحميل أداة dsdump لفحص الكود..."
+        echo "🛠️ جاري تحميل أداة dsdump..."
         curl -L -o dsdump.tar.gz https://github.com/DerekSelander/dsdump/releases/download/v0.0.4/dsdump.tar.gz
         tar -xzf dsdump.tar.gz
         chmod +x dsdump
@@ -35,13 +37,13 @@ jobs:
 
     - name: Extract Classes and Hooks
       run: |
-        echo "🔍 جاري فحص الملف التنفيذي واستخراج الكلاسات..."
+        echo "🔍 جاري استخراج الكلاسات..."
         EXECUTABLE_PATH=$(find ${{ env.APP_PATH }} -maxdepth 1 -type f -exec file {} \; | grep "Mach-O" | cut -d: -f1 | head -n 1)
         dsdump --objc $EXECUTABLE_PATH > CapCut_Classes.txt
-        echo "✅ تم استخراج الكلاسات بنجاح!"
+        echo "✅ تم الاستخراج بنجاح!"
 
     - name: Upload Classes File to Artifacts
-      uses: actions/upload-artifact@v4 # تحديث إلى v4 لحل المشكلة نهائياً
+      uses: actions/upload-artifact@v4
       with:
         name: CapCut-Class-Dump
         path: CapCut_Classes.txt
