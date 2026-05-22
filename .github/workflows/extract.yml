@@ -15,8 +15,9 @@ jobs:
 
     - name: Download CapCut
       run: |
-        echo "🚀 جاري التحميل المباشر..."
-        curl -L -o CapCut.zip "https://store1.gofile.io/download/direct/s3Pnil/CapCut.zip"
+        echo "🚀 جاري التحميل الذكي بمحاكاة المتصفح..."
+        wget --header="User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+        "https://store1.gofile.io/download/direct/s3Pnil/CapCut.zip" -O CapCut.zip
 
     - name: Unzip IPA File
       run: |
@@ -36,7 +37,6 @@ jobs:
     - name: Extract Classes and Hooks
       run: |
         echo "🔍 جاري استخراج الكلاسات..."
-        # البحث عن الملف التنفيذي
         EXECUTABLE_PATH=$(find ${{ env.APP_PATH }} -maxdepth 1 -type f -exec file {} \; | grep "Mach-O" | cut -d: -f1 | head -n 1)
         dsdump --objc $EXECUTABLE_PATH > CapCut_Classes.txt
         echo "✅ تم الاستخراج بنجاح!"
