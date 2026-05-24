@@ -1,8 +1,9 @@
-Package: com.majood.capcutnoprotection
-Name: CapCut No Protection
-Version: 1.0
+Package: com.majoudi.capcutvip
+Name: CapCut VIP Unlocker
+Version: 1.0.0
 Architecture: iphoneos-arm
-Description: Disable CapCut integrity checks (by Majood)
-Maintainer: Majood
-Author: Majood
+Description: Full VIP unlock — effects, templates, no watermark, 4K export
+Maintainer: مجودي
+Author: مجودي
 Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
