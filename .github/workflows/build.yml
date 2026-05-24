@@ -19,6 +19,19 @@ jobs:
           export THEOS=$HOME/theos
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
 
+      - name: Install iOS SDK
+        run: |
+          # نجيب أحدث SDK من Theos
+          export THEOS=$HOME/theos
+          cd $THEOS
+          # نشوف وش SDK موجود
+          ls -la $THEOS/sdks/ 2>/dev/null || echo "No SDKs found"
+          # نجيب SDK من GitHub
+          curl -L -o iPhoneOS16.5.sdk.zip https://github.com/theos/sdks/releases/latest/download/iPhoneOS16.5.sdk.zip
+          unzip -q iPhoneOS16.5.sdk.zip -d $THEOS/sdks/
+          rm iPhoneOS16.5.sdk.zip
+          ls -la $THEOS/sdks/
+
       - name: Build Tweak (dylib)
         run: |
           export THEOS=$HOME/theos
@@ -26,8 +39,18 @@ jobs:
           make
           echo "✅ Tweak built! Checking output..."
 
+      - name: List output files
+        run: |
+          echo "=== Searching for dylib ==="
+          find . -name "*.dylib" -type f 2>/dev/null
+          echo "=== Searching .theos directory ==="
+          ls -la .theos/obj/debug/ 2>/dev/null || echo "No debug dylib found"
+          ls -la .theos/obj/release/ 2>/dev/null || echo "No release dylib found"
+
       - name: Upload dylib as artifact
         uses: actions/upload-artifact@v4
         with:
           name: CapCutVIP.dylib
-          path: .theos/obj/debug/CapCutVIP.dylib
+          path: |
+            .theos/obj/debug/CapCutVIP.dylib
+            .theos/obj/release/CapCutVIP.dylib
