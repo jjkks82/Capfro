@@ -1,12 +1,13 @@
-TARGET := iphone:clang:latest:14.0
+TARGET := iphone:clang:16.5:14.0
+INSTALL_TARGET_PROCESSES = CapCut
+
 ARCHS = arm64 arm64e
 
+TWEAK_NAME = CapCutVIP
+CapCutVIP_FILES = Tweak.xm
+CapCutVIP_CFLAGS = -fobjc-arc
+CapCutVIP_FRAMEWORKS = UIKit Foundation
+CapCutVIP_LIBRARIES = substrate
+
 include $(THEOS)/makefiles/common.mk
-
-TWEAK_NAME = CapCutNoProtection
-
-CapCutNoProtection_FILES = Tweak.xm
-CapCutNoProtection_CFLAGS = -fobjc-arc
-CapCutNoProtection_FRAMEWORKS = UIKit Foundation
-
-include $(THEOS_MAKE_PATH)/tweak.mk
+include $(THEOS)/makefiles/tweak.mk
